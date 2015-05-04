@@ -3,6 +3,7 @@
 	<name>Minibase_part_2</name>
 	<comment></comment>
 	<projects>
+		<project>Relational Operators</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
