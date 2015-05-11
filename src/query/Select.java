@@ -56,9 +56,9 @@ class Select implements Plan {
 		QueryCheck.predicates(combined_schema, predicates);// check correct form
 															// of predicates
 		// everything valid so we put plan
-		for(int i=0;i<predicates.length;i++,System.out.println())
-			for (int j = 0; j < predicates[i].length; j++) 
-				System.out.print(" "+predicates[i][j].toString());
+//		for(int i=0;i<predicates.length;i++,System.out.println())
+//			for (int j = 0; j < predicates[i].length; j++) 
+//				System.out.print(" "+predicates[i][j].toString());
 		iterators=new Iterator[filesName.length];
 		System.out.println("\n\n\n\n\n\n LINE !!!");
 		for(int i=0;i<filesName.length;i++){
@@ -70,22 +70,24 @@ class Select implements Plan {
 			//the predicates of one table)
 			ArrayList<Predicate[]> arr=new ArrayList<>();//hold predicates of the current table
 			for(int j=0;j<predicates.length;j++){
-				boolean valid=true;				
-				for (int k = 0; k < predicates[j].length; k++) {
-					if(!predicates[j][k].validate(schema)){//means that predicate attributes don't belong to table
-						valid=false;
-						break;
+				boolean valid=true;
+				if(predicates[j]!=null){
+					for (int k = 0; k < predicates[j].length; k++) {
+						if(!predicates[j][k].validate(schema)){//means that predicate attributes don't belong to table
+							valid=false;
+							break;
+						}
 					}
-				}
-				if(valid){
-					arr.add(predicates[j]);
-					predicates[j]=null;//means this predicate is not needed anymore;
+					if(valid){
+						arr.add(predicates[j]);
+						predicates[j]=null;//means this predicate is not needed anymore;
+					}	
 				}
 			}
 				if(arr.size()>0)//means that we select certain tuples from table based on a condition
 				{
 					
-					//	iterators[i]=new Selection(iterators[i], (Predicate[][])arr.toArray(new Predicate[arr.size()][]));
+					iterators[i]=new Selection(iterators[i], (Predicate[][])arr.toArray(new Predicate[arr.size()][]));
 //					Predicate[][]test=(Predicate[][])arr.toArray(new Predicate[arr.size()][]);
 //					System.out.println(filesName[i]+"  :");
 //					for(int i1=0;i1<test.length;i1++,System.out.println()){
@@ -123,14 +125,14 @@ class Select implements Plan {
 					}						
 				}
 			}
-			//result=new SimpleJoin(result, iterators[i], (Predicate[][])preds_of_join.toArray());			
+			result=new SimpleJoin(result, iterators[i], (Predicate[][])preds_of_join.toArray(new Predicate[preds_of_join.size()][]));			
 		}//joining is done
 		if(columns.length>0){//means we're projecting on certain columns
 			Integer[] fields=new Integer[columns.length];
 			for (int i = 0; i < fields.length; i++) {
 				fields[i]=first.fieldNumber(columns[i]);	
 			}			
-		//	result=new Projection(result, fields);
+			result=new Projection(result, fields);
 		}
 		int x=result.execute();
 		result.close();

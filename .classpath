@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/diskmgr.jar"/>
 	<classpathentry kind="lib" path="lib/index.jar"/>
 	<classpathentry kind="lib" path="lib/heap.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Relational Operators"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Minibase_part_1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
